@@ -10,6 +10,6 @@
     "localizedDescription": "A fast, private remote for S1 speaker systems. Room control is free; an unlock code adds everything else.",
     "iconURL": "https://lotboyjewelry-coder.github.io/legacy-remote/icon.png",
     "tintColor": "0071E3",
-    "versions": [{ "version": "1.0.0", "date": "2026-10-08T08:15:11Z", "downloadURL": "https://lotboyjewelry-coder.github.io/legacy-remote/LegacyRemote.ipa", "size": 1098229, "minOSVersion": "17.0" }]
+    "versions": [{ "version": "1.0.0", "date": "2026-10-08T08:21:03Z", "downloadURL": "https://lotboyjewelry-coder.github.io/legacy-remote/LegacyRemote.ipa", "size": 1101292, "minOSVersion": "17.0" }]
   }]
 }
