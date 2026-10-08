@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="icon.png">
+<title>Get Legacy Remote</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: store-style download page — two product columns (iPhone, Mac), then numbered install steps, then unlock. */
+:root {
+  --page: #ffffff; --band: #f5f5f7; --tile: #ffffff; --ink: #1d1d1f; --ink-2: #6e6e73; --hair: #d2d2d7;
+  --link: #0066cc; --cta: #0071e3;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Geist", "Helvetica Neue", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --page: #000; --band: #101012; --tile: #1c1c1e; --ink: #f5f5f7; --ink-2: #a1a1a6; --hair: #38383d; --link: #2997ff; --cta: #0a84ff; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --page: #000; --band: #101012; --tile: #1c1c1e; --ink: #f5f5f7; --ink-2: #a1a1a6; --hair: #38383d; --link: #2997ff; --cta: #0a84ff; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 17px/1.47 var(--sans); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
+a { color: var(--link); text-decoration: none; } a:hover { text-decoration: underline; }
+a:focus-visible { outline: 3px solid var(--cta); outline-offset: 3px; border-radius: 8px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; letter-spacing: -0.025em; font-weight: 600; }
+p { margin: 0; }
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); background: color-mix(in srgb, var(--page) 80%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--hair); z-index: 5; }
+.nav div { max-width: 1024px; margin: 0 auto; padding-inline: 20px; height: 52px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
+.nav b { font-size: 19px; color: var(--ink); }
+.band { padding-inline: 20px; padding-block: 72px; } .band.gray { background: var(--band); }
+.inner { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; }
+.center { text-align: center; justify-items: center; }
+h1 { font-size: clamp(40px, 7vw, 72px); line-height: 1.05; font-weight: 700; }
+.sub { font-size: clamp(19px, 2.4vw, 24px); color: var(--ink-2); max-width: 32em; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+.tile { background: var(--tile); border-radius: 28px; padding: 32px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.band:not(.gray) .tile { background: var(--band); }
+.tile h2 { font-size: 32px; }
+.k { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.pill { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 980px; background: var(--cta); color: #fff; font-weight: 500; }
+.pill:hover { text-decoration: none; filter: brightness(1.08); }
+ol.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 10px; color: var(--ink-2); }
+ol.steps b { color: var(--ink); font-weight: 600; }
+code { font: 14px ui-monospace, "SF Mono", Menlo, monospace; background: var(--band); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.band:not(.gray) code { background: var(--tile); }
+.note { font-size: 14px; color: var(--ink-2); }
+footer { border-top: 1px solid var(--hair); padding-inline: 20px; padding-block: 22px 40px; background: var(--band); }
+footer p { max-width: 980px; margin: 0 auto; font-size: 12px; color: var(--ink-2); }
+</style>
+</head><body>
+
+<nav class="nav"><div><a href="index.html"><b>Legacy Remote</b></a><a href="support.html">Support</a></div></nav>
+
+<main>
+  <section class="band">
+    <div class="inner center">
+      <h1>Get Legacy Remote.</h1>
+      <p class="sub">Free to download. Room control is free forever. Unlock everything else once for $9.99.</p>
+    </div>
+  </section>
+
+  <section class="band gray">
+    <div class="inner">
+      <div class="cols">
+        <div class="tile">
+          <span class="k">iPhone · iOS 17 or later</span>
+          <h2>Legacy Remote for iPhone</h2>
+          <p>Installs with SideStore, a free app that adds apps from outside the App Store using your own Apple Account.</p>
+          <a class="pill" href="LegacyRemote.ipa">Download for iPhone</a>
+          <p class="note">Or add this source in SideStore to get updates automatically: <code>source.json</code> on this site.</p>
+        </div>
+        <div class="tile">
+          <span class="k">Mac · macOS 14 or later</span>
+          <h2>Legacy Remote for Mac</h2>
+          <p>The full remote on your Mac, plus the music server that plays your Mac's songs on any room and shares them with your iPhone.</p>
+          <a class="pill" href="LegacyRemote-mac.zip">Download for Mac</a>
+          <p class="note">Apple Silicon Macs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="inner">
+      <div class="cols">
+        <div class="tile">
+          <span class="k">Install on iPhone</span>
+          <h3 style="font-size:24px">About 10 minutes, once.</h3>
+          <ol class="steps">
+            <li><b>Install SideStore.</b> Follow the official guide at <a href="https://sidestore.io">sidestore.io</a>. Recent versions install without a computer.</li>
+            <li><b>Add Legacy Remote.</b> In SideStore, open Sources, tap +, and paste this site's <code>source.json</code> address. Or open My Apps, tap +, and choose the file you downloaded.</li>
+            <li><b>Allow it.</b> Open Legacy Remote and tap Allow when it asks to find devices on your network.</li>
+            <li><b>Keep it fresh.</b> Apps from free Apple Accounts expire after 7 days. Open SideStore once a week to refresh it.</li>
+          </ol>
+        </div>
+        <div class="tile">
+          <span class="k">Install on Mac</span>
+          <h3 style="font-size:24px">Two minutes.</h3>
+          <ol class="steps">
+            <li><b>Open the zip</b> and drag Legacy Remote to Applications.</li>
+            <li><b>Open it once.</b> macOS will say it can't verify the developer. Click Done.</li>
+            <li><b>Allow it.</b> Go to System Settings › Privacy &amp; Security, scroll down, and click Open Anyway next to Legacy Remote.</li>
+            <li><b>Allow network access</b> when asked, so it can reach your speakers and your iPhone.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band gray">
+    <div class="inner center">
+      <h2 style="font-size:clamp(32px,5vw,48px)">Unlock everything. Once.</h2>
+      <p class="sub">Buy an unlock code, then paste it into the app under Settings › Unlock Everything. One code works on up to five of your devices.</p>
+      <a class="pill" href="https://nextvaulthq.gumroad.com/l/legacyremote" id="buy">Buy an Unlock Code, $9.99</a>
+      <p class="note">Payments are handled by Gumroad. Codes arrive by email right away.</p>
+    </div>
+  </section>
+</main>
+
+<footer><p>Legacy Remote is an independent app. It is not affiliated with, endorsed by, or sponsored by Sonos, Inc. Sonos is a trademark of Sonos, Inc., used here only to describe compatible products.</p></footer>
+</body></html>

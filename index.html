@@ -1,0 +1,340 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="icon.png">
+<title>Legacy Remote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: an Apple-Store-style product page — airy centered bands that alternate surfaces,
+   a rendered iPhone as the hero object, a tile grid, then the record, the ledger, price, sources. */
+:root {
+  --page: #ffffff;
+  --band: #f5f5f7;          /* store-floor gray */
+  --tile: #ffffff;
+  --ink: #1d1d1f;
+  --ink-2: #6e6e73;
+  --hair: #d2d2d7;
+  --link: #0066cc;
+  --cta: #0071e3;
+  --fault: #c9342a;         /* used only for what was taken away */
+  --device: #1d1d1f;        /* phone frame */
+  --screen: #0e1012;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Geist", "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SF Mono", "Geist Mono", Menlo, monospace;
+  --r-tile: 28px;
+  --shadow: 0 2px 6px rgba(0,0,0,.04), 0 18px 44px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #000000; --band: #101012; --tile: #1c1c1e; --ink: #f5f5f7; --ink-2: #a1a1a6;
+    --hair: #38383d; --link: #2997ff; --cta: #0a84ff; --fault: #ff6961; --device: #2c2c2e;
+    --screen: #0e1012; --shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #000000; --band: #101012; --tile: #1c1c1e; --ink: #f5f5f7; --ink-2: #a1a1a6;
+  --hair: #38383d; --link: #2997ff; --cta: #0a84ff; --fault: #ff6961; --device: #2c2c2e;
+  --screen: #0e1012; --shadow: 0 0 0 1px rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--page); color: var(--ink); font: 17px/1.47 var(--sans); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--cta); outline-offset: 3px; border-radius: 8px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 600; letter-spacing: -0.025em; }
+p { margin: 0; }
+
+/* Store nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: color-mix(in srgb, var(--page) 80%, transparent);
+  backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--hair); }
+.nav-in { max-width: 1024px; margin: 0 auto; padding-inline: 20px; height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { font-weight: 600; font-size: 19px; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.brand svg { width: 18px; height: 18px; }
+.nav-links { display: flex; gap: 22px; font-size: 13px; }
+.nav-links a { color: var(--ink-2); }
+.pill { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 22px; border-radius: 980px;
+  background: var(--cta); color: #fff; font-size: 17px; font-weight: 500; border: 0; cursor: pointer; transition: transform .2s, filter .2s; }
+.pill:hover { text-decoration: none; filter: brightness(1.08); }
+.pill:active { transform: scale(.97); }
+.pill.small { min-height: 30px; padding: 0 14px; font-size: 13px; }
+.more { font-size: 17px; }
+.more::after { content: " ›"; }
+
+.band { padding-inline: 20px; padding-block: 88px; }
+.band.gray { background: var(--band); }
+.inner { max-width: 980px; margin: 0 auto; display: grid; gap: 28px; justify-items: center; text-align: center; }
+.eyebrow { font-size: 21px; font-weight: 600; color: var(--ink-2); letter-spacing: -0.01em; }
+.eyebrow.fault { color: var(--fault); }
+h1 { font-size: clamp(48px, 9vw, 96px); line-height: 1.04; letter-spacing: -0.035em; font-weight: 700; }
+h2 { font-size: clamp(36px, 6vw, 56px); line-height: 1.07; }
+.sub { font-size: clamp(21px, 2.6vw, 28px); line-height: 1.2; color: var(--ink-2); max-width: 30em; font-weight: 500; letter-spacing: -0.015em; }
+.ctas { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.note { font-size: 14px; color: var(--ink-2); }
+
+/* Hero iPhone */
+.stage { width: 100%; display: flex; justify-content: center; padding-top: 28px; }
+.phone { width: min(330px, 86vw); aspect-ratio: 330 / 690; max-width: 100%; border-radius: 56px; background: var(--device); padding: 12px;
+  box-shadow: var(--shadow), inset 0 0 0 2px rgba(255,255,255,.08); animation: settle 900ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes settle { from { transform: translateY(14px) scale(.985); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .phone { animation: none; } }
+.screen { height: 100%; border-radius: 44px; background: var(--screen); color: #eceff1; overflow: hidden; position: relative;
+  display: flex; flex-direction: column; text-align: left; font-family: -apple-system, BlinkMacSystemFont, "Geist", sans-serif; letter-spacing: 0; }
+.island { width: 34%; height: 30px; background: #000; border-radius: 20px; margin: 10px auto 0; flex: none; }
+.status { position: absolute; top: 16px; left: 30px; right: 30px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+.app { padding: 18px 16px 0; display: grid; gap: 12px; flex: 1; align-content: start; }
+.app h4 { margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
+.card { background: #1a1d21; border-radius: 18px; padding: 12px; display: grid; gap: 10px; }
+.np { display: flex; gap: 10px; align-items: center; }
+.art { width: 50px; height: 50px; border-radius: 8px; flex: none; background: conic-gradient(from 210deg at 30% 70%, #6b7c8f, #c8cdd3, #3a4552, #8b6f5e, #6b7c8f); }
+.art.b { background: radial-gradient(circle at 70% 30%, #e7c9a9, #7a5a48 55%, #22272d); }
+.np b { display: block; font-size: 14px; }
+.np span { font-size: 12px; color: #9aa3ab; }
+.tp { display: flex; justify-content: center; gap: 30px; align-items: center; }
+.tp svg { width: 20px; height: 20px; fill: #eceff1; }
+.tp .pp { width: 38px; height: 38px; }
+.vol { display: grid; grid-template-columns: 62px 1fr 22px; gap: 8px; align-items: center; font-size: 11px; color: #9aa3ab; }
+.track { height: 4px; border-radius: 4px; background: #33383e; position: relative; }
+.track i { position: absolute; inset: 0 auto 0 0; border-radius: 4px; background: #c8cdd3; }
+.track i::after { content: ""; position: absolute; right: -7px; top: -5px; width: 14px; height: 14px; border-radius: 50%; background: #f1f3f5; }
+.tabs { display: flex; justify-content: space-around; padding: 10px 6px 20px; border-top: 1px solid #23272c; background: #121417; }
+.tabs div { display: grid; justify-items: center; gap: 2px; font-size: 10px; color: #7f8890; }
+.tabs div.on { color: #eceff1; }
+.tabs svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+
+/* Tiles */
+.tiles { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; text-align: left; }
+.tile { background: var(--tile); border-radius: var(--r-tile); padding: 36px 32px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.band.gray .tile { box-shadow: none; }
+.tile .k { font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.tile h3 { font-size: 28px; line-height: 1.12; }
+.tile p { color: var(--ink-2); font-size: 17px; }
+.tile.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; }
+.tile svg.ic { width: 36px; height: 36px; stroke: var(--cta); fill: none; stroke-width: 1.6; }
+@media (max-width: 720px) { .tile.wide { grid-template-columns: 1fr; } }
+
+/* The record */
+.record { list-style: none; margin: 0; padding: 0; width: 100%; max-width: 760px; text-align: left; display: grid; }
+.record li { display: grid; grid-template-columns: 112px 1fr; gap: 20px; padding-block: 26px; border-top: 1px solid var(--hair); }
+.record time { font: 500 14px/1.6 var(--mono); color: var(--ink-2); }
+.record h3 { font-size: 21px; margin-bottom: 6px; letter-spacing: -0.015em; }
+.record p { color: var(--ink-2); max-width: 58ch; }
+.record small { display: block; margin-top: 8px; font-size: 13px; }
+blockquote { margin: 12px 0 0; font-size: 19px; font-style: italic; color: var(--ink); }
+@media (max-width: 560px) { .record li { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Ledger */
+.ledger { width: 100%; max-width: 760px; overflow-x: auto; background: var(--tile); border-radius: 22px; }
+table { width: 100%; min-width: 460px; border-collapse: collapse; text-align: left; font-size: 17px; }
+th, td { padding: 16px 22px; border-bottom: 1px solid var(--hair); }
+th { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+tr:last-child td { border-bottom: 0; }
+td.x { color: var(--fault); }
+td.ok { color: var(--ink); font-weight: 600; }
+td.x::before { content: "✕  "; font-size: 12px; }
+td.ok::before { content: "✓  "; color: var(--cta); }
+
+/* Price */
+.price { font-size: clamp(64px, 11vw, 112px); font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.price sup { font-size: .35em; vertical-align: .9em; margin-right: 4px; font-weight: 600; }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 20px; width: 100%; max-width: 760px; text-align: left; }
+.split .tile h3 { font-size: 24px; }
+.limits { max-width: 640px; color: var(--ink-2); }
+
+.sources { font-size: 13px; color: var(--ink-2); display: grid; gap: 6px; text-align: left; width: 100%; max-width: 760px; }
+footer { border-top: 1px solid var(--hair); padding-inline: 20px; padding-block: 22px 40px; background: var(--band); }
+footer p { max-width: 980px; margin: 0 auto; font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+@media (max-width: 600px) { .nav-links { display: none; } .band { padding-block: 64px; } }
+</style>
+</head><body>
+
+<nav class="nav" aria-label="Legacy Remote">
+  <div class="nav-in">
+    <span class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="3"/><circle cx="12" cy="14" r="3.2"/><circle cx="12" cy="7" r=".9" fill="currentColor"/></svg>Legacy Remote</span>
+    <div class="nav-links"><a href="#features">Features</a><a href="#why">Why</a><a href="#price">Price</a><a href="support.html">Support</a></div>
+    <a class="pill small" href="download.html">Download</a>
+  </div>
+</nav>
+
+<main>
+  <section class="band" aria-labelledby="hero">
+    <div class="inner">
+      <p class="eyebrow">Legacy Remote for S1 systems</p>
+      <h1 id="hero">Your speakers.<br>Back in your hands.</h1>
+      <p class="sub">A fast, private remote for the Sonos speakers you already own. No account. No cloud. Rooms appear in about a second.</p>
+      <div class="ctas">
+        <a class="pill" href="download.html">Download free</a>
+        <a class="more" href="#why">Why it exists</a>
+      </div>
+      <div class="stage" aria-hidden="true">
+        <div class="phone"><div class="screen">
+          <div class="status"><span>9:41</span><span>●●●</span></div>
+          <div class="island"></div>
+          <div class="app">
+            <h4>Rooms</h4>
+            <div class="card">
+              <div class="np"><div class="art"></div><div><b>Living Room + Kitchen</b><span>Night Drive · Coastal Lines</span></div></div>
+              <div class="tp">
+                <svg viewBox="0 0 24 24"><path d="M18 6l-8.5 6L18 18zM6 6h2v12H6z"/></svg>
+                <svg class="pp" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#eceff1"/><path d="M9.5 7.5h2v9h-2zM12.5 7.5h2v9h-2z" fill="#0e1012"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M6 6l8.5 6L6 18zM16 6h2v12h-2z"/></svg>
+              </div>
+              <div class="vol">All<div class="track"><i style="width:38%"></i></div>38</div>
+              <div class="vol">Living Room<div class="track"><i style="width:44%"></i></div>44</div>
+              <div class="vol">Kitchen<div class="track"><i style="width:30%"></i></div>30</div>
+            </div>
+            <div class="card">
+              <div class="np"><div class="art b"></div><div><b>Bedroom</b><span>Paused · Slow Morning</span></div></div>
+              <div class="vol">Bedroom<div class="track"><i style="width:18%"></i></div>18</div>
+            </div>
+          </div>
+          <div class="tabs">
+            <div class="on"><svg viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="14" r="3"/></svg>Rooms</div>
+            <div><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>My Music</div>
+            <div><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Queue</div>
+            <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Settings</div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band gray" id="features" aria-labelledby="feat">
+    <div class="inner">
+      <h2 id="feat">Everything you count on.<br>Right where you left it.</h2>
+      <div class="tiles">
+        <div class="tile wide">
+          <div style="display:grid;gap:10px">
+            <span class="k">Your music library</span>
+            <h3>Every song on your Mac, on every speaker.</h3>
+            <p>Browse by artist, album or song, search instantly, and see the album art. Install the free Mac companion and your iPhone finds the library on its own.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" aria-hidden="true">
+            <div class="art" style="width:100%;height:auto;aspect-ratio:1;border-radius:12px"></div>
+            <div class="art b" style="width:100%;height:auto;aspect-ratio:1;border-radius:12px"></div>
+            <div class="art" style="width:100%;height:auto;aspect-ratio:1;border-radius:12px;filter:hue-rotate(160deg)"></div>
+          </div>
+        </div>
+        <div class="tile">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <span class="k">Sleep timer and alarms</span>
+          <h3>Fall asleep to it. Wake up to it.</h3>
+          <p>Set a sleep timer in two taps. Alarms by room, by day, with your favorites.</p>
+        </div>
+        <div class="tile">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10M18 15v6M15 18h6"/></svg>
+          <span class="k">The queue</span>
+          <h3>Reorder it. Trim it. Save it.</h3>
+          <p>Drag songs into place, play next, or save the queue as a playlist for later.</p>
+        </div>
+        <div class="tile">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M3 9v6M21 9v6"/></svg>
+          <span class="k">Lock screen and buttons</span>
+          <h3>Turn it up without unlocking.</h3>
+          <p>Play, skip and seek from the lock screen and Control Center. The volume buttons control the room.</p>
+        </div>
+        <div class="tile">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+          <span class="k">Room settings</span>
+          <h3>Tune every room.</h3>
+          <p>Bass, treble, loudness, night sound, speech enhancement, sub and surround levels.</p>
+        </div>
+        <div class="tile">
+          <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span class="k">Privacy</span>
+          <h3>Nothing leaves your home.</h3>
+          <p>No account, no sign-in, no tracking. It talks to your speakers directly on your Wi-Fi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="why" aria-labelledby="whyh">
+    <div class="inner">
+      <p class="eyebrow fault">Why it exists</p>
+      <h2 id="whyh">You paid for the speakers.<br>They should keep working.</h2>
+      <p class="sub">The hardware still sounds great. Over the past six years, the software around it has let owners down.</p>
+      <ol class="record">
+        <li><time datetime="2019-10">Oct 2019</time><div>
+          <h3>Working speakers, bricked for a discount</h3>
+          <p>Sonos's trade-up program required owners to put old speakers into Recycle Mode, which permanently disabled them after 21 days. Sonos dropped the requirement in March 2020 after the backlash.</p>
+          <small><a href="https://www.engadget.com/2019-12-31-sonos-recycle-mode-explanation-falls-flat.html">Engadget</a> · <a href="https://www.techdirt.com/2020/03/13/sonos-backs-off-plan-to-brick-older-still-functioning-speakers/">Techdirt</a></small></div></li>
+        <li><time datetime="2020-06">Jun 2020</time><div>
+          <h3>One home, two systems</h3>
+          <p>Sonos moved new products to S2 and left older ones on S1, with bug and security fixes only. Homes with both had to split into two systems that can't play together.</p>
+          <small><a href="https://www.whathifi.com/news/new-sonos-s2-platform-paves-the-way-for-hi-res-audio">What Hi-Fi?</a> · <a href="https://www.techadvisor.com/article/739218/sonos-s2-app-upgrades-supported-products-s1-compatibility.html">Tech Advisor</a></small></div></li>
+        <li><time datetime="2024-05-07">May 2024</time><div>
+          <h3>A new app, with features missing</h3>
+          <p>The redesigned app shipped without sleep timers, alarms, queue editing or local library browsing. Sonos later put the cost of fixing it at $20 to $30 million.</p>
+          <blockquote>"I want to begin by personally apologising for disappointing you."</blockquote>
+          <small>Sonos CEO, July 2024 · <a href="https://www.whathifi.com/news/sonos-ceo-apologises-for-the-app-redesign-that-deleted-key-features">What Hi-Fi?</a> · <a href="https://www.galaxus.de/en/page/sonos-leadership-change-after-app-debacle-36359">Galaxus</a></small></div></li>
+        <li><time datetime="2025-01-13">Jan 2025</time><div>
+          <h3>The CEO steps down</h3>
+          <p>Patrick Spence left after eight years, following the widely criticized launch.</p>
+          <small><a href="https://www.pcworld.com/article/2575403/sonos-ceo-is-out-following-disastrous-app-revamp-that-enraged-customers.html">PCWorld</a></small></div></li>
+        <li><time datetime="2026">2026</time><div>
+          <h3>The S1 app still stalls</h3>
+          <p>Owners report the S1 app hanging on a blank screen when they add a music service. The official workaround is to use a computer.</p>
+          <small><a href="https://en.community.sonos.com/controllers-and-music-services-229131/cannot-add-a-music-service-on-sonos-s1-6883366">Sonos Community</a></small></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band gray" aria-labelledby="ledh">
+    <div class="inner">
+      <h2 id="ledh">What came back.</h2>
+      <div class="ledger">
+        <table>
+          <thead><tr><th>Feature</th><th>New Sonos app, May 2024</th><th>Legacy Remote</th></tr></thead>
+          <tbody>
+            <tr><td>Sleep timer</td><td class="x">Missing</td><td class="ok">Included</td></tr>
+            <tr><td>Alarms</td><td class="x">Missing</td><td class="ok">Included</td></tr>
+            <tr><td>Edit and save the queue</td><td class="x">Missing</td><td class="ok">Included</td></tr>
+            <tr><td>Your own music library</td><td class="x">Missing</td><td class="ok">Included</td></tr>
+            <tr><td>Works with S1 speakers</td><td class="x">No</td><td class="ok">Yes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Sonos restored several of these to its newer app later. The S1 app kept them but gets no new features.</p>
+    </div>
+  </section>
+
+  <section class="band" id="price" aria-labelledby="priceh">
+    <div class="inner">
+      <p class="eyebrow">Free to download</p>
+      <h2 id="priceh">Free to start.<br>Unlock everything once.</h2>
+      <div class="split">
+        <div class="tile" style="background:var(--band)">
+          <span class="k">Free</span>
+          <h3>Room control</h3>
+          <p>Every room at a glance. Play, pause, skip, volume, grouping, sleep timer, and lock-screen and volume-button control. Free forever.</p>
+        </div>
+        <div class="tile" style="background:var(--band)">
+          <span class="k">One-time unlock</span>
+          <div class="price"><sup>$</sup>9.99</div>
+          <p>Your music library, browsing, queue editing, alarms and room settings. No subscription.</p>
+        </div>
+      </div>
+      <a class="pill" href="download.html">Get Legacy Remote</a>
+      <p class="limits">Legacy Remote works with S1 systems on your home Wi-Fi. Set up new speakers and streaming accounts once in the S1 app. Everything already on your speakers plays here, including streaming favorites.</p>
+    </div>
+  </section>
+
+  <section class="band gray" aria-labelledby="srch">
+    <div class="inner">
+      <h2 id="srch" style="font-size:28px">Sources</h2>
+      <div class="sources">
+        <a href="https://archive.techdirt.com/articles/20200309/10420944063/sonos-backs-off-plan-to-brick-older-still-functioning-speakers.shtml">Techdirt, March 2020: Sonos backs off plan to brick older speakers</a>
+        <a href="https://www.engadget.com/2019-12-31-sonos-recycle-mode-explanation-falls-flat.html">Engadget, December 2019: Sonos's explanation for Recycle Mode</a>
+        <a href="https://www.whathifi.com/news/new-sonos-s2-platform-paves-the-way-for-hi-res-audio">What Hi-Fi?, 2020: Sonos launches the S2 platform</a>
+        <a href="https://www.whathifi.com/news/sonos-ceo-apologises-for-the-app-redesign-that-deleted-key-features">What Hi-Fi?, 2024: Sonos CEO apologises for the app redesign</a>
+        <a href="https://www.galaxus.de/en/page/sonos-leadership-change-after-app-debacle-36359">Galaxus, January 2025: Leadership change and the cost of the fix</a>
+        <a href="https://www.pcworld.com/article/2575403/sonos-ceo-is-out-following-disastrous-app-revamp-that-enraged-customers.html">PCWorld, January 2025: Sonos CEO is out</a>
+        <a href="https://en.community.sonos.com/controllers-and-music-services-229131/cannot-add-a-music-service-on-sonos-s1-6883366">Sonos Community: Cannot add a music service on S1</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Legacy Remote is an independent app. It is not affiliated with, endorsed by, or sponsored by Sonos, Inc. Sonos is a trademark of Sonos, Inc., used here only to describe compatible products. App Store is a service mark of Apple Inc.</p>
+</footer>
+</body></html>
